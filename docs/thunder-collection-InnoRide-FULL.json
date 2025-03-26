@@ -1,0 +1,143 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "InnoRide API",
+  "dateExported": "2025-03-26",
+  "folders": [],
+  "requests": [
+    {
+      "_id": "1",
+      "name": "Register",
+      "url": "http://127.0.0.1:8000/api/register",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": {
+          "name": "Rizky",
+          "email": "rizky@mail.com",
+          "password": "password",
+          "role": "user"
+        }
+      }
+    },
+    {
+      "_id": "2",
+      "name": "Login",
+      "url": "http://127.0.0.1:8000/api/login",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": {
+          "email": "rizky@mail.com",
+          "password": "password"
+        }
+      }
+    },
+    {
+      "_id": "3",
+      "name": "Get Profile",
+      "url": "http://127.0.0.1:8000/api/profile",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer <token>"
+        }
+      ]
+    },
+    {
+      "_id": "4",
+      "name": "Update Profile",
+      "url": "http://127.0.0.1:8000/api/profile",
+      "method": "PUT",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer <token>"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": {
+          "username": "rizkyramadhan",
+          "profile_picture": "https://example.com/photo.jpg"
+        }
+      }
+    },
+    {
+      "_id": "5",
+      "name": "List Vehicles",
+      "url": "http://127.0.0.1:8000/api/vehicles",
+      "method": "GET"
+    },
+    {
+      "_id": "6",
+      "name": "Create Booking",
+      "url": "http://127.0.0.1:8000/api/bookings",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer <token>"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": {
+          "vehicle_id": 1,
+          "start_date": "2025-04-01",
+          "end_date": "2025-04-03"
+        }
+      }
+    },
+    {
+      "_id": "7",
+      "name": "Create Review",
+      "url": "http://127.0.0.1:8000/api/reviews",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer <token>"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": {
+          "vehicle_id": 1,
+          "rating": 5,
+          "comment": "Mantap kendaraannya!"
+        }
+      }
+    },
+    {
+      "_id": "8",
+      "name": "List Promos",
+      "url": "http://127.0.0.1:8000/api/promos",
+      "method": "GET"
+    }
+  ]
+}
