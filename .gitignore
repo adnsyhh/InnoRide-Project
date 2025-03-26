@@ -1,0 +1,30 @@
+
+# === Global ===
+.DS_Store
+*.log
+*.lock
+*.env
+.env.*
+.idea/
+.vscode/
+
+# === Laravel (web-admin) ===
+web-admin/vendor/
+web-admin/node_modules/
+web-admin/.env
+web-admin/.env.*
+web-admin/storage/*.key
+web-admin/storage/debugbar/
+web-admin/public/storage
+web-admin/storage/*.log
+web-admin/bootstrap/cache/
+
+# === Flutter (mobile) ===
+mobile/.dart_tool/
+mobile/.idea/
+mobile/.packages
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.metadata
+mobile/build/
+mobile/pubspec.lock
