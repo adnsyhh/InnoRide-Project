@@ -96,8 +96,8 @@ Lihat `docs/API_Documentation.md` untuk penjelasan lengkap setiap endpoint.
 
 ## 🧑‍💻 Kontak Developer
 
-- 📧 rizky@innoride.com
-- 🐙 GitHub: [github.com/username](https://github.com/username)
+- 📧 adnansyah26@gmail.com
+- 🐙 GitHub: [github.com/adnsyhh](https://github.com/adnsyhh)
 
 ---
 
