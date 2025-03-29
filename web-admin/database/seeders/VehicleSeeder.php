@@ -32,5 +32,16 @@ class VehicleSeeder extends Seeder
             'transmission' => 'matic',
             'door_count' => 0,
         ]);
+        Vehicle::create([
+            'name' => 'Toyota Fortuner',
+            'type' => 'mobil',
+            'price_per_day' => 550000,
+            'availability' => true,
+            'description' => 'Mobil manual gacoorrr',
+            'image_url' => 'https://example.com/fortuner.jpg',
+            'seat_capacity' => 7,
+            'transmission' => 'manual',
+            'door_count' => 4,
+        ]);
     }
 }
