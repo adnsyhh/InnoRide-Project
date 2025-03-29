@@ -36,6 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
         const SnackBar(content: Text("Login gagal, periksa email & password")),
       );
     }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', result?['token']);
+    await prefs.setString('username', result?['user']['username']);
+    // await prefs.setString('name', result?['user']['name']);
   }
 
   @override

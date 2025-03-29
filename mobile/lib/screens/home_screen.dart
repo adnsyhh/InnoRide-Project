@@ -1,7 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../core/api_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String username = '';
+  List<dynamic> vehicles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsername();
+    loadVehicles();
+  }
+
+  Future<void> loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username') ?? 'User';
+    });
+  }
+
+  void loadVehicles() async {
+    try {
+      final data = await ApiService.getVehicles();
+      setState(() {
+        vehicles = data;
+      });
+    } catch (e) {
+      debugPrint("Error loading vehicles: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,8 +45,8 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: const Text(
-          'Hello, Rizky ',
+        title: Text(
+          'Hello, $username ',
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -19,13 +54,9 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const CircleAvatar(
-              backgroundImage: NetworkImage(
-                'https://example.com/images/profile.jpg',
-              ),
-            ),
-            onPressed: () {},
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Image.asset('assets/images/logo-innoride.png', height: 32),
           ),
         ],
       ),
@@ -55,38 +86,45 @@ class HomeScreen extends StatelessWidget {
                 height: 200,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder:
-                      (context, index) => Container(
-                        width: 160,
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Image.network(
-                                'https://example.com/vehicle.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Toyota Avanza',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text('⭐ 4.5 (20 Reviews)'),
-                          ],
-                        ),
+                  itemCount: vehicles.length,
+                  itemBuilder: (context, index) {
+                    final vehicle = vehicles[index];
+                    return Container(
+                      width: 160,
+                      margin: const EdgeInsets.only(right: 12),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(16),
                       ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Image.network(
+                              vehicle['image_url'] ?? '',
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (context, error, stackTrace) =>
+                                      const Icon(Icons.error),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            vehicle['name'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '⭐ ${vehicle['rating']?.toStringAsFixed(1) ?? '0.0'} (${vehicle['review_count'] ?? 0} Reviews)',
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 24),
