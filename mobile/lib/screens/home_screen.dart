@@ -118,6 +118,12 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/analytics');
+                },
+                child: const Text('View Analytics'),
+              ),
             ],
           ),
         ),

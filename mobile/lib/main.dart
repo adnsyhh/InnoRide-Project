@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/analytics_screen.dart';
 
 void main() {
   runApp(const InnoRideApp());
@@ -23,6 +24,7 @@ class InnoRideApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const HomeScreen(),
+        '/analytics': (context) => const AnalyticsScreen(),
         // '/register': (context) => const RegisterScreen(), 
       },
     );
