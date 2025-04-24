@@ -7,7 +7,11 @@ use App\Http\Controllers\API\ReviewController;
 use App\Http\Controllers\API\PromoController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProfileController;
+
 use App\Http\Controllers\API\RecommendationController;
+
+use App\Http\Controllers\API\AnalyticsController;
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
@@ -42,4 +46,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+
 Route::middleware('auth:sanctum')->get('/recommendations', [RecommendationController::class, 'recommend']);
+
+Route::middleware(['own-cors'])->group(function () {
+    Route::get('/analytics', [AnalyticsController::class, 'index']);
+});
+
