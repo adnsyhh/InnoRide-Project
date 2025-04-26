@@ -22,6 +22,7 @@ class Vehicle extends Model
         'seat_capacity',
         'transmission',
         'door_count',
+        'category',
     ];
 
     /**

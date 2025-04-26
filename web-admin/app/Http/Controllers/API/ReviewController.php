@@ -75,4 +75,26 @@ class ReviewController extends Controller
 
         return response()->json(['message' => 'Review deleted']);
     }
+
+    public function submitRating(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string',
+        ]);
+
+        // Menyimpan rating dan komentar menggunakan model Review
+        $review = Review::create([
+            'vehicle_id' => $request->vehicle_id,
+            'user_id' => auth()->id(), // Menyimpan id pengguna yang sedang login
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return response()->json(['message' => 'Rating submitted successfully', 'review' => $review]);
+    }
+
+
 }

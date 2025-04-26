@@ -13,10 +13,22 @@ class BookingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Booking::with(['user', 'vehicle'])->get();
+        $user = $request->user(); // Ambil user dari token
+
+        $bookings = Booking::with(['user', 'vehicle'])
+            ->where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(function ($booking) {
+                $booking->reminder_date = $booking->reminder_date; // dari accessor model
+                return $booking;
+            });
+
+        return response()->json($bookings);
     }
+
 
     /**
      * Store a newly created resource in storage.

@@ -10,7 +10,7 @@ use App\Http\Controllers\API\ProfileController;
 
 use App\Http\Controllers\API\RecommendationController;
 
-use App\Http\Controllers\API\AnalyticsController;
+// use App\Http\Controllers\API\AnalyticsController;
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -25,7 +25,9 @@ Route::get('/ping', function () {
 
 // API CRUD Resource
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('vehicles', VehicleController::class);
+    // Menambahkan rute khusus untuk mengambil kendaraan berdasarkan kategori
+    Route::get('/vehicles', [VehicleController::class, 'getVehicles']);  // Mendapatkan kendaraan berdasarkan kategori
+    Route::apiResource('vehicles', VehicleController::class);  // CRUD untuk kendaraan
 });
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('bookings', BookingController::class);
@@ -46,10 +48,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+Route::middleware('auth:api')->post('/ratings', [ReviewController::class, 'submitRating']);
 
-Route::middleware('auth:sanctum')->get('/recommendations', [RecommendationController::class, 'recommend']);
+Route::middleware('auth:api')->get('/ratings/{vehicle_id}', [ReviewController::class, 'show']);
 
-Route::middleware(['own-cors'])->group(function () {
-    Route::get('/analytics', [AnalyticsController::class, 'index']);
-});
+
+// Route::middleware(['own-cors'])->group(function () {
+//     Route::get('/analytics', [AnalyticsController::class, 'index']);
+// });
 
