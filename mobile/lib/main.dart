@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
-import 'screens/analytics_screen.dart';
-import 'screens/promo_screen.dart';
 
-void main() {
+// import 'screens/landing_screen.dart';
+// import 'screens/analytics_screen.dart';
+import 'screens/promo_screen.dart';
+import 'package:innoride/core/notification_helper.dart';
+import '../core/api_service.dart';
+
+void main() async {
   runApp(const InnoRideApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationHelper.initialize();
+
 }
 
 class InnoRideApp extends StatelessWidget {
@@ -25,7 +32,8 @@ class InnoRideApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => HomeScreen(),
-        '/analytics': (context) => const AnalyticsScreen(),
+        // '/analytics': (context) => const AnalyticsScreen(),
+
         '/promo': (context) => PromoScreen(),
         // '/register': (context) => const RegisterScreen(),
       },

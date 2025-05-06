@@ -10,12 +10,10 @@ use App\Http\Controllers\API\ProfileController;
 
 use App\Http\Controllers\API\RecommendationController;
 
-// use App\Http\Controllers\API\AnalyticsController;
-
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']); 
+    Route::post('/profile/upload-picture', [ProfileController::class, 'uploadPicture']);
 });
 
 // Route Test
@@ -48,12 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
-Route::middleware('auth:api')->post('/ratings', [ReviewController::class, 'submitRating']);
-
-Route::middleware('auth:api')->get('/ratings/{vehicle_id}', [ReviewController::class, 'show']);
-
-
-// Route::middleware(['own-cors'])->group(function () {
-//     Route::get('/analytics', [AnalyticsController::class, 'index']);
-// });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/recommendations', [RecommendationController::class, 'recommend']);
+});
 

@@ -1,48 +1,56 @@
-//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-//import 'package:flutter/material.dart';
-//import 'package:timezone/timezone.dart' as tz;
-//import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
-// class NotificationHelper {
-//   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
-//       FlutterLocalNotificationsPlugin();
+class NotificationHelper {
+  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-//   static Future<void> initialize() async {
-//     // Initialize timezone
-//     tzdata.initializeTimeZones();
+  // ✅ Function initialize() harus async
+  static Future<void> initialize() async {
+    // Inisialisasi timezone data
+    tz.initializeTimeZones();
 
-//     const AndroidInitializationSettings initializationSettingsAndroid =
-//         AndroidInitializationSettings('@mipmap/ic_launcher');
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-//     const InitializationSettings initializationSettings =
-//         InitializationSettings(android: initializationSettingsAndroid);
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
 
-//     await _notificationsPlugin.initialize(initializationSettings);
-//   }
+    await _notificationsPlugin.initialize(initializationSettings);
+  }
 
-//   static Future<void> scheduleReminder({
-//     required int id,
-//     required String title,
-//     required String body,
-//     required DateTime scheduledTime,
-//   }) async {
-//     await _notificationsPlugin.zonedSchedule(
-//       id,
-//       title,
-//       body,
-//       tz.TZDateTime.from(scheduledTime, tz.local),
-//       const NotificationDetails(
-//         android: AndroidNotificationDetails(
-//           'reminder_channel',
-//           'Reminder Notifications',
-//           channelDescription: 'Notification for vehicle return reminder',
-//           importance: Importance.max,
-//           priority: Priority.high,
-//         ),
-//       ),
-//       androidAllowWhileIdle: true,
-//       uiLocalNotificationDateInterpretation:
-//           UILocalNotificationDateInterpretation.absoluteTime,
-//     );
-//   }
-// }
+  // ✅ Function scheduleNotification() juga async
+  static Future<void> scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledDate,
+  }) async {
+    await _notificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local), // 🛠️ Ini pakai TZDateTime
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'booking_channel', // ID channel
+          'Booking Notifications', // Nama channel
+          channelDescription: 'Notification for rental reminder',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.dateAndTime,
+    );
+  }
+
+  // ✅ Function cancelNotification() juga async
+  static Future<void> cancelNotification(int id) async {
+    await _notificationsPlugin.cancel(id);
+  }
+}
+

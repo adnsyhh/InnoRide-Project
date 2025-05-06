@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:innoride/core/api_service.dart';
+import 'package:innoride/core/notification_helper.dart';
 
 class RentDetailScreen extends StatefulWidget {
   final Map<String, dynamic> car;
@@ -43,6 +44,25 @@ class _RentDetailScreenState extends State<RentDetailScreen> {
     }
   }
 
+  void onBookingSuccess(DateTime bookingEndTime) {
+    scheduleBookingNotification(bookingEndTime);
+  }
+
+  void scheduleBookingNotification(DateTime bookingEndTime) {
+    final DateTime notificationTime = bookingEndTime.subtract(
+      const Duration(days: 1),
+    );
+
+    if (notificationTime.isAfter(DateTime.now())) {
+      NotificationHelper.scheduleNotification(
+        id: 1,
+        title: 'Pengingat Pengembalian',
+        body: 'Waktu sewa kendaraan kamu hampir habis. Segera kembalikan ya!',
+        scheduledDate: notificationTime,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final car = widget.car;
@@ -50,10 +70,10 @@ class _RentDetailScreenState extends State<RentDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
+        title: const Text(
           'RENT DETAILS',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -73,18 +93,18 @@ class _RentDetailScreenState extends State<RentDetailScreen> {
                 height: 150,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               'Nama Mobil: ${car['name']}',
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: const TextStyle(fontSize: 16, color: Colors.black),
             ),
             Text(
               'Kategori: ${car['category'] ?? "-"}',
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: const TextStyle(fontSize: 16, color: Colors.black),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             ListTile(
-              title: Text(
+              title: const Text(
                 'Tanggal Sewa',
                 style: TextStyle(color: Colors.black),
               ),
@@ -92,13 +112,13 @@ class _RentDetailScreenState extends State<RentDetailScreen> {
                 _rentalDate == null
                     ? 'Pilih Tanggal'
                     : DateFormat('dd-MM-yyyy').format(_rentalDate!),
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
               ),
-              trailing: Icon(Icons.calendar_today, color: Colors.black),
+              trailing: const Icon(Icons.calendar_today, color: Colors.black),
               onTap: () => _selectDate(context, (date) => _rentalDate = date),
             ),
             ListTile(
-              title: Text(
+              title: const Text(
                 'Tanggal Pengembalian',
                 style: TextStyle(color: Colors.black),
               ),
@@ -106,26 +126,26 @@ class _RentDetailScreenState extends State<RentDetailScreen> {
                 _returnDate == null
                     ? 'Pilih Tanggal'
                     : DateFormat('dd-MM-yyyy').format(_returnDate!),
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
               ),
-              trailing: Icon(Icons.calendar_today, color: Colors.black),
+              trailing: const Icon(Icons.calendar_today, color: Colors.black),
               onTap: () => _selectDate(context, (date) => _returnDate = date),
             ),
-            SizedBox(height: 12),
-            Divider(),
-            Text(
+            const SizedBox(height: 12),
+            const Divider(),
+            const Text(
               'Total Price',
               style: TextStyle(fontSize: 16, color: Colors.black),
             ),
             Text(
               'Rp ${getTotalPrice().toStringAsFixed(0)}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -147,6 +167,9 @@ class _RentDetailScreenState extends State<RentDetailScreen> {
                   );
 
                   if (success) {
+                    // ✅ Tambahkan jadwal notifikasi setelah booking sukses
+                    onBookingSuccess(_returnDate!);
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Penyewaan berhasil")),
                     );
@@ -162,11 +185,11 @@ class _RentDetailScreenState extends State<RentDetailScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 14),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Text(
                       'Rent Now',
                       style: TextStyle(fontSize: 16, color: Colors.white),

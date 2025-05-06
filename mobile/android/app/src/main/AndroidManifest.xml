@@ -1,14 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mobile">
 
-    <!-- Wajib untuk Android 13+ -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    package="com.example.mobile"> <!-- pastikan ada package, atau tambah manual -->
+
+    <!-- Tambahan permission kamera dan storage -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Ini optional kalau mau edit foto -->
 
     <application
         android:label="mobile"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -18,10 +21,10 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            
             <meta-data
-                android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme" />
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+            />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,36 +32,10 @@
             </intent-filter>
         </activity>
 
-        <!-- Wajib untuk Flutter plugins -->
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
-        <!-- WAJIB untuk notifikasi -->
-        <receiver
-            android:name="com.dexterous.flutterlocalnotifications.receivers.ActionBroadcastReceiver"
-            android:exported="true" />
-
-        <receiver
-            android:name="com.dexterous.flutterlocalnotifications.receivers.ScheduledNotificationBootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="com.dexterous.flutterlocalnotifications.receivers.ScheduledNotificationReceiver"
-            android:exported="false" />
-
-        <service
-            android:name="com.dexterous.flutterlocalnotifications.services.ForegroundService"
-            android:foregroundServiceType="mediaPlayback"
-            android:enabled="true"
-            android:exported="true" />
-
     </application>
 
     <queries>

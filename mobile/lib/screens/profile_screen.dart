@@ -1,8 +1,10 @@
+import 'dart:io'; // ⬅️ Tambahan untuk file
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // ⬅️ Tambahan untuk pick image
 import '../core/api_service.dart';
 import 'rating_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import '../core/notification_helper.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -13,30 +15,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List bookings = [];
   bool isLoading = true;
   bool isProfileLoading = true;
-
   Map<String, dynamic> profile = {};
+  File? _profileImage; // ⬅️ Tambahan untuk foto profil
+
 
   @override
   void initState() {
     super.initState();
-    //NotificationHelper.initialize();
     fetchProfile();
     fetchBookings();
   }
 
-  void fetchProfile() async {
-    try {
-      final data = await ApiService.getProfile();
-      print('✅ Profile data from API: $data');
-      setState(() {
-        profile = data;
-        isProfileLoading = false;
-      });
-    } catch (e) {
-      print('❌ Error fetching profile: $e');
-      setState(() => isProfileLoading = false);
-    }
+
+  Future<void> fetchProfile() async {
+  try {
+    final data = await ApiService.getProfile();
+    print('✅ Profile data from API: $data');
+    setState(() {
+      profile = data;
+      isProfileLoading = false;
+    });
+  } catch (e) {
+    print('❌ Error fetching profile: $e');
+    setState(() => isProfileLoading = false);
   }
+}
+
 
   void fetchBookings() async {
     try {
@@ -46,21 +50,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         isLoading = false;
       });
 
-      // for (var b in result) {
-      //   final endDate = DateTime.parse(b['end_date']);
-      //   final reminderTime = endDate.subtract(
-      //     const Duration(hours: 1),
-      //   ); // ⏰ 1 jam sebelum
-      //   if (reminderTime.isAfter(DateTime.now())) {
-      //     await NotificationHelper.scheduleReminder(
-      //       id: b['id'], // id booking sebagai id notifikasi
-      //       title: "Pengembalian Kendaraan",
-      //       body:
-      //           "Kendaraan ${b['vehicle']['name']} harus dikembalikan 1 jam lagi.",
-      //       scheduledTime: reminderTime,
-      //     );
-      //   }
-      // }
     } catch (e) {
       print('❌ Error loading bookings: $e');
       setState(() => isLoading = false);
@@ -138,6 +127,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // ==== Tambahan fungsi untuk ambil gambar ====
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+
+      // Tampilkan loading spinner saat upload
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+
+      try {
+        await ApiService.uploadProfilePicture(imageFile);
+        await fetchProfile(); // Ambil ulang data profile setelah upload
+        if (mounted) {
+          Navigator.of(context).pop(); // Tutup loading
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Profile picture updated')),
+          );
+        }
+      } catch (e) {
+        print('❌ Error uploading picture: $e');
+        if (mounted) {
+          Navigator.of(context).pop(); // Tutup loading
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to upload profile picture')),
+          );
+        }
+      }
+    }
+  }
+
+  void _showImagePickerOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('Take a Photo'),
+                onTap: () {
+                  _pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Choose from Gallery'),
+                onTap: () {
+                  _pickImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  // ============================================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,16 +249,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
-                                'assets/images/car.png',
-                                height: 120,
-                                width: 120,
-                                fit: BoxFit.cover,
-                              ),
+
+                              child:
+                                  _profileImage != null
+                                      ? Image.file(
+                                        _profileImage!,
+                                        height: 120,
+                                        width: 120,
+                                        fit: BoxFit.cover,
+                                      )
+                                      : (profile['profile_picture_url'] != null
+                                          ? Image.network(
+                                            profile['profile_picture_url'],
+                                            height: 120,
+                                            width: 120,
+                                            fit: BoxFit.cover,
+                                          )
+                                          : Image.asset(
+                                            'assets/images/car.png',
+                                            height: 120,
+                                            width: 120,
+                                            fit: BoxFit.cover,
+                                          )),
                             ),
                             const SizedBox(height: 5),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _showImagePickerOptions(context);
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.grey[300],
                               ),
@@ -267,71 +343,99 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       itemCount: bookings.length,
                       itemBuilder: (context, index) {
                         final booking = bookings[index];
                         bool hasRated =
                             booking['rating'] != null && booking['rating'] > 0;
-
-                        return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(10),
+                        return FutureBuilder(
+                          future: ApiService.getRating(
+                            booking['vehicle']['id'],
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                booking['vehicle']['name'] ?? 'Unknown',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+
+                            final rating = snapshot.data;
+
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              Text(
-                                'Tanggal penyewaan: ${_formatDate(booking['start_date'])} s/d ${_formatDate(booking['end_date'])}',
-                              ),
-                              Text('Status: ${booking['status']}'),
-                              Text('Total harga: Rp ${booking['total_price']}'),
-                              const SizedBox(height: 8),
-                              hasRated
-                                  ? const Text(
-                                    'Sudah memberi rating',
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.green,
-                                    ),
-                                  )
-                                  : ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) => RatingScreen(
-                                                booking: booking,
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.black,
-                                    ),
-                                    child: const Text(
-                                      'Beri Rating',
-                                      style: TextStyle(color: Colors.white),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    booking['vehicle']['name'] ?? 'Unknown',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                            ],
-                          ),
+                                  Text(
+                                    'Tanggal penyewaan: ${_formatDate(booking['start_date'])} s/d ${_formatDate(booking['end_date'])}',
+                                  ),
+                                  Text('Status: ${booking['status']}'),
+                                  Text(
+                                    'Total harga: Rp ${booking['total_price']}',
+                                  ),
+                                  const SizedBox(height: 8),
+                                  rating != null
+                                      ? const Text(
+                                        'Sudah memberi rating',
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          color: Colors.green,
+                                        ),
+                                      )
+                                      : ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (_) => RatingScreen(
+                                                    booking: booking,
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.black,
+                                        ),
+                                        child: const Text(
+                                          'Beri Rating',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                ],
+                              ),
+                            );
+                          },
+
                         );
                       },
                     ),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SizedBox(
