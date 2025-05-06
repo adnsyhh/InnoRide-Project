@@ -23,7 +23,9 @@ Route::get('/ping', function () {
 
 // API CRUD Resource
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('vehicles', VehicleController::class);
+    // Menambahkan rute khusus untuk mengambil kendaraan berdasarkan kategori
+    Route::get('/vehicles', [VehicleController::class, 'getVehicles']);  // Mendapatkan kendaraan berdasarkan kategori
+    Route::apiResource('vehicles', VehicleController::class);  // CRUD untuk kendaraan
 });
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('bookings', BookingController::class);
@@ -43,6 +45,8 @@ Route::middleware('auth:sanctum')->group(function () {
         return auth()->user();
     });
 });
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/recommendations', [RecommendationController::class, 'recommend']);
 });

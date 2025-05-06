@@ -101,4 +101,19 @@ class VehicleController extends Controller
         Vehicle::destroy($id);
         return response()->json(['message' => 'Vehicle deleted']);
     }
+
+    public function getVehicles(Request $request)
+    {
+        $category = $request->query('category', 'All'); // Default kategori "All"
+        
+        $vehicles = Vehicle::query();
+        
+        // Jika kategori bukan 'All', filter kendaraan berdasarkan kategori
+        if ($category !== 'All') {
+            $vehicles = $vehicles->where('category', $category);
+        }
+        
+        return response()->json($vehicles->get()); // Mengembalikan data kendaraan yang sudah difilter
+    }
+
 }

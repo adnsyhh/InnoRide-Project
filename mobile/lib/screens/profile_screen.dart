@@ -343,7 +343,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         final booking = bookings[index];
                         bool hasRated =
                             booking['rating'] != null && booking['rating'] > 0;
-
                         return FutureBuilder(
                           future: ApiService.getRating(
                             booking['vehicle']['id'],
