@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // use App\Models\Booking;
@@ -21,7 +21,9 @@ class ProfileController extends Controller
             'name' => $user->name,
             'username' => $user->username,
             'email' => $user->email,
-            'profile_picture' => $user->profile_picture,
+            'profile_picture_url' => $user->profile_picture
+                ? asset('storage/' . $user->profile_picture)
+                : null,
             'history' => $user->bookings->map(function ($booking) {
                 return [
                     'vehicle_name' => $booking->vehicle->name,
@@ -33,6 +35,7 @@ class ProfileController extends Controller
             }),
         ]);
     }
+
     public function update(Request $request)
     {
         $user = auth()->user();
@@ -49,4 +52,38 @@ class ProfileController extends Controller
             'data' => $user
         ]);
     }
+
+    public function uploadPicture(Request $request)
+    {
+        $user = $request->user();
+
+        // Validasi input file
+        $request->validate([
+            'picture' => 'required|image|mimes:jpeg,png,jpg|max:2048', // maksimal 2MB
+        ]);
+
+        if (!$request->hasFile('picture')) {
+            return response()->json(['message' => 'No file uploaded'], 400);
+        }
+
+        $file = $request->file('picture');
+
+        // Hapus file lama kalau ada
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+
+        // Simpan file baru ke folder storage/app/public/profile_pictures
+        $path = $file->store('profile_pictures', 'public');
+
+        // Update database
+        $user->profile_picture = $path;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile picture uploaded successfully',
+            'profile_picture_url' => asset('storage/' . $path),
+        ]);
+    }
+
 }

@@ -8,9 +8,12 @@ use App\Http\Controllers\API\PromoController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProfileController;
 
+use App\Http\Controllers\API\RecommendationController;
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']); 
+    Route::post('/profile/upload-picture', [ProfileController::class, 'uploadPicture']);
 });
 
 // Route Test
@@ -39,4 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', function () {
         return auth()->user();
     });
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/recommendations', [RecommendationController::class, 'recommend']);
 });
