@@ -5,7 +5,7 @@ import 'screens/home_screen.dart';
 // import 'screens/analytics_screen.dart';
 import 'screens/promo_screen.dart';
 import 'package:innoride/core/notification_helper.dart';
-import '../core/api_service.dart';
+// import '../core/api_service.dart';
 
 void main() async {
   runApp(const InnoRideApp());

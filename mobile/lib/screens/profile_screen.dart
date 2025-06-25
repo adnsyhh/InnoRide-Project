@@ -25,19 +25,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> fetchProfile() async {
-  try {
-    final data = await ApiService.getProfile();
-    print('✅ Profile data from API: $data');
-    setState(() {
-      profile = data;
-      isProfileLoading = false;
-    });
-  } catch (e) {
-    print('❌ Error fetching profile: $e');
-    setState(() => isProfileLoading = false);
+    try {
+      final data = await ApiService.getProfile();
+      print('✅ Profile data from API: $data');
+      setState(() {
+        profile = data;
+        isProfileLoading = false;
+      });
+    } catch (e) {
+      print('❌ Error fetching profile: $e');
+      setState(() => isProfileLoading = false);
+    }
   }
-}
-
 
   void fetchBookings() async {
     try {
@@ -341,8 +340,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       itemCount: bookings.length,
                       itemBuilder: (context, index) {
                         final booking = bookings[index];
-                        bool hasRated =
-                            booking['rating'] != null && booking['rating'] > 0;
+                        // bool hasRated =
+                        //     booking['rating'] != null && booking['rating'] > 0;
                         return FutureBuilder(
                           future: ApiService.getRating(
                             booking['vehicle']['id'],

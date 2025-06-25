@@ -1,0 +1,210 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #fff;
+}
+
+.container {
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 70px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    margin-left: 10px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    border-right: 1px solid #ccc;
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo img {
+    width: 60px;
+    height: auto;
+    display: block;
+    /* background-color: #000; warna latar belakang logo */
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.menu-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 👈 ini agar posisi ikon vertikal di tengah */
+    gap: 25px;
+    flex-grow: 1;
+}
+
+.menu-icons img {
+    width: 35px;
+    height: 35px;
+}
+
+/* Main */
+.main {
+    flex-grow: 1;
+    padding: 30px;
+    min-height: 100vh;
+}
+
+/* Topbar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.search-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.search-bar {
+    width: 90%;
+    max-width: 1000px;
+    padding: 12px 20px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+}
+
+/* User Management Box */
+.user-management-wrapper {
+    background: linear-gradient(to right, #000, #999);
+    padding: 30px;
+    border-radius: 25px;
+}
+
+.user-table table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    table-layout: fixed; /* penting agar kolom sejajar */
+}
+
+.user-table th,
+.user-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+.user-table th {
+    font-size: 16px;
+    font-weight: bold;
+    color: white; /* 🔁 ubah dari #333 ke putih */
+    text-align: center;
+}
+
+/* Atur lebar kolom agar rata */
+.user-table th:nth-child(1),
+.user-table td:nth-child(1) {
+    width: 15%;
+}
+.user-table th:nth-child(2),
+.user-table td:nth-child(2) {
+    width: 20%;
+}
+.user-table th:nth-child(3),
+.user-table td:nth-child(3) {
+    width: 10%;
+}
+.user-table th:nth-child(4),
+.user-table td:nth-child(4) {
+    width: 10%;
+}
+.user-table th:nth-child(5),
+.user-table td:nth-child(5) {
+    width: 13%;
+}
+.user-table th:nth-child(6),
+.user-table td:nth-child(6) {
+    width: 10%;
+}
+
+.cell {
+    background: #eee;
+    padding: 10px 14px;
+    border-radius: 12px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Dropdown Status */
+/* Umum */
+.status-dropdown {
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-weight: bold;
+    border: none;
+    color: white;
+    width: 130%; /* biar menyesuaikan container */
+    max-width: 160px; /* mencegah terlalu lebar */
+    box-sizing: border-box;
+    text-align: center;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.status-active {
+    background-color: #00cc00;
+}
+
+.status-inactive {
+    background-color: #e60000;
+}
+
+/* Untuk pengalaman yang lebih halus */
+.table-scroll-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.table-scroll-wrapper table {
+    min-width: 800px; /* atau sesuai kebutuhan */
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.notification-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    cursor: pointer;
+}

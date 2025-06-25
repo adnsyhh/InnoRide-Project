@@ -1,0 +1,160 @@
+/* RESET & BASE */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+}
+
+.container {
+    display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 70px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    margin-left: 10px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    border-right: 1px solid #ccc;
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo img {
+    width: 60px;
+    height: auto;
+    display: block;
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.menu-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    flex-grow: 1;
+}
+
+.menu-icons img {
+    width: 35px;
+    height: 35px;
+}
+
+/* MAIN */
+.main {
+    flex-grow: 1;
+    padding: 30px;
+    color: #000;
+    min-height: 100vh;
+}
+
+/* TOPBAR */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    flex: 1;
+    margin-right: 20px;
+    max-width: 1000px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    border-radius: 20px;
+    outline: none;
+}
+
+/* USER INFO */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.notification-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.user-name {
+    font-size: 16px;
+    color: black;
+}
+
+/* PROMO SECTION */
+.promo-section {
+    margin-top: 30px;
+}
+
+.promo-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.promo-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.promo-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-width: 250px;
+    max-width: 350px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.promo-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.promo-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.promo-card p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}

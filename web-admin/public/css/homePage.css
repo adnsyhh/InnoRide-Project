@@ -1,0 +1,139 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+}
+
+.container {
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 70px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    margin-left: 10px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    border-right: 1px solid #ccc;
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo img {
+    width: 60px;
+    height: auto;
+    display: block;
+    /* background-color: #000; warna latar belakang logo */
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.menu-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 👈 ini agar posisi ikon vertikal di tengah */
+    gap: 25px;
+    flex-grow: 1;
+}
+
+.menu-icons img {
+    width: 35px;
+    height: 35px;
+}
+
+/* Main Content */
+.main {
+    flex-grow: 1;
+    padding: 30px;
+    color: #000;
+    min-height: 100vh;
+}
+
+/* Top Bar */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    flex: 1;
+    margin-right: 20px;
+    max-width: 1000px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    border-radius: 20px;
+    outline: none;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    background: linear-gradient(to right, #000, #999);
+    padding: 30px;
+    border-radius: 25px;
+}
+
+.status-boxes {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.box {
+    background: #eee;
+    padding: 20px;
+    width: 180px;
+    min-height: 80px;
+    text-align: center;
+    color: #000;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+
+.content-box {
+    background: #eee;
+    height: 180px;
+    border-radius: 10px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.notification-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    cursor: pointer;
+}

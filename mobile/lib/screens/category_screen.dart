@@ -39,6 +39,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
     }
   }
 
+  void fetchVehiclesByCategory(String category) async {
+    try {
+      final result = await ApiService.getVehicles(category: category);
+      setState(() {
+        selectedCategory = category;
+        vehicles = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching vehicles: $e');
+      setState(() => isLoading = false);
+    }
+  }
+
   // Fungsi untuk mendapatkan kendaraan yang terfilter berdasarkan kategori
   List<dynamic> getFilteredVehicles() {
     // Jika kategori "All", tampilkan semua kendaraan
@@ -79,7 +93,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final vehiclesToShow = isSearching ? searchResults : getFilteredVehicles();
+    final vehiclesToShow = isSearching ? searchResults : vehicles;
 
     return GestureDetector(
       onTap: () {
@@ -160,7 +174,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       isLoading =
                                           true; // Set loading state while fetching new data
                                     });
-                                    fetchVehicles(); // Memanggil fetchVehicles untuk memuat data kategori yang dipilih
+                                    fetchVehiclesByCategory(category);
+                                    ; // Memanggil fetchVehicles untuk memuat data kategori yang dipilih
                                   },
                                   labelStyle: TextStyle(
                                     color:

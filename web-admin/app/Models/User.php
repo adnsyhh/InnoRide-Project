@@ -21,7 +21,7 @@ class User extends Authenticatable
         'role', // untuk membedakan admin/user
         'username',
         'profile_picture',
-
+        'user_sts', // status: active/inactive
     ];
 
     /**
@@ -38,6 +38,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Relasi: satu user bisa memiliki banyak booking
+     */
     public function bookings()
     {
         return $this->hasMany(Booking::class);

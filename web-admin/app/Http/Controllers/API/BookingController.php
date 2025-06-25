@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Notifications\NewBookingNotification;
 
 class BookingController extends Controller
 {
@@ -55,6 +56,10 @@ class BookingController extends Controller
             'status' => 'pending',
             'total_price' => $total,
         ]);
+        
+        // 
+        $admin = User::where('role', 'admin')->first();
+        $admin->notify(new NewBookingNotification($booking));
 
         return response()->json($booking, 201);
     }

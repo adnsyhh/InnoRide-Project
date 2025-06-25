@@ -24,7 +24,7 @@ Route::get('/ping', function () {
 // API CRUD Resource
 Route::middleware('auth:sanctum')->group(function () {
     // Menambahkan rute khusus untuk mengambil kendaraan berdasarkan kategori
-    Route::get('/vehicles', [VehicleController::class, 'getVehicles']);  // Mendapatkan kendaraan berdasarkan kategori
+    Route::get('/vehicles/by-category', [VehicleController::class, 'getVehicles']);  // Mendapatkan kendaraan berdasarkan kategori
     Route::apiResource('vehicles', VehicleController::class);  // CRUD untuk kendaraan
 });
 Route::middleware('auth:sanctum')->group(function () {

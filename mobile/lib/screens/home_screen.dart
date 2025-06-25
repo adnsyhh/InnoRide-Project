@@ -55,16 +55,22 @@ class _HomePageScreen extends State<HomeScreen> {
   // Fungsi untuk mengambil kendaraan berdasarkan kategori
   void fetchVehicles() async {
     try {
-      final result = await ApiService.getVehicles(category: selectedCategory); // Menggunakan category yang dipilih
+      final result = await ApiService.getVehicles(
+        category: selectedCategory,
+      ); // Menggunakan category yang dipilih
 
       setState(() {
         if (selectedCategory == "All") {
           vehicles = result; // Tampilkan semua kendaraan jika kategori "All"
         } else {
-          vehicles = result.where((car) {
-            final category = (car['category'] ?? '').toString().toLowerCase();
-            return category == selectedCategory.toLowerCase(); // Filter berdasarkan kategori yang dipilih
-          }).toList();
+          vehicles =
+              result.where((car) {
+                final category =
+                    (car['category'] ?? '').toString().toLowerCase();
+                return category ==
+                    selectedCategory
+                        .toLowerCase(); // Filter berdasarkan kategori yang dipilih
+              }).toList();
         }
         isLoading = false;
       });
@@ -77,13 +83,17 @@ class _HomePageScreen extends State<HomeScreen> {
   // Fungsi pencarian berdasarkan nama atau kategori kendaraan
   void performSearch(String query) async {
     try {
-      final allVehicles = await ApiService.getVehicles(category: selectedCategory); // Menggunakan kategori yang dipilih
+      final allVehicles = await ApiService.getVehicles(
+        category: selectedCategory,
+      ); // Menggunakan kategori yang dipilih
 
-      final results = allVehicles.where((car) {
-        final name = (car['name'] ?? '').toString().toLowerCase();
-        final category = (car['category'] ?? '').toString().toLowerCase();
-        return name.contains(query.toLowerCase()) || category.contains(query.toLowerCase());
-      }).toList();
+      final results =
+          allVehicles.where((car) {
+            final name = (car['name'] ?? '').toString().toLowerCase();
+            final category = (car['category'] ?? '').toString().toLowerCase();
+            return name.contains(query.toLowerCase()) ||
+                category.contains(query.toLowerCase());
+          }).toList();
 
       setState(() {
         searchResults = results;
@@ -146,23 +156,29 @@ class _HomePageScreen extends State<HomeScreen> {
                 // Search bar
                 TextField(
                   controller: searchController,
-                  onTap: () => setState(() {
-                    isSearching = true;
-                  }),
+                  onTap:
+                      () => setState(() {
+                        isSearching = true;
+                      }),
                   onChanged: (value) => performSearch(value),
                   decoration: InputDecoration(
                     hintText: 'Search',
                     prefixIcon: const Icon(Icons.search, color: Colors.black),
-                    suffixIcon: isSearching
-                        ? IconButton(
-                            icon: const Icon(Icons.close, color: Colors.black),
-                            onPressed: () => setState(() {
-                              isSearching = false;
-                              searchController.clear();
-                              searchResults.clear();
-                            }),
-                          )
-                        : null,
+                    suffixIcon:
+                        isSearching
+                            ? IconButton(
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.black,
+                              ),
+                              onPressed:
+                                  () => setState(() {
+                                    isSearching = false;
+                                    searchController.clear();
+                                    searchResults.clear();
+                                  }),
+                            )
+                            : null,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -171,7 +187,7 @@ class _HomePageScreen extends State<HomeScreen> {
                 const SizedBox(height: 20),
 
                 // Tampilkan hasil pencarian jika ada
-                if (isSearching && searchResults.isNotEmpty) ...[
+                if (isSearching && vehiclesToShow.isNotEmpty) ...[
                   const Text(
                     "Hasil Pencarian",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -187,8 +203,9 @@ class _HomePageScreen extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                DetailVehicleScreen(vehicleId: car['id']),
+                            builder:
+                                (_) =>
+                                    DetailVehicleScreen(vehicleId: car['id']),
                           ),
                         );
                       },
@@ -266,13 +283,14 @@ class _HomePageScreen extends State<HomeScreen> {
                 isLoadingPromo
                     ? const Center(child: CircularProgressIndicator())
                     : Column(
-                        children: promos.map((promo) {
-                          return _buildPromoCard(
-                            title: promo['code'] ?? 'Promo',
-                            description: promo['description'] ?? '',
-                          );
-                        }).toList(),
-                      ),
+                      children:
+                          promos.map((promo) {
+                            return _buildPromoCard(
+                              title: promo['code'] ?? 'Promo',
+                              description: promo['description'] ?? '',
+                            );
+                          }).toList(),
+                    ),
               ],
             ),
           ),

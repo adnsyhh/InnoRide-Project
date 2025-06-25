@@ -12,26 +12,33 @@ class VehicleController extends Controller
      * Display a listing of the resource.
      */
     // GET /api/vehicles
-    public function index()
+    public function index(Request $request)
     {
-        $vehicles = Vehicle::with('reviews') // relasi review
-            ->get()
-            ->map(function ($vehicle) {
-                return [
-                    'id' => $vehicle->id,
-                    'name' => $vehicle->name,
-                    'type' => $vehicle->type,
-                    'price_per_day' => $vehicle->price_per_day,
-                    'availability' => $vehicle->availability,
-                    'description' => $vehicle->description,
-                    'image_url' => $vehicle->image_url,
-                    'seat_capacity' => $vehicle->seat_capacity,
-                    'transmission' => $vehicle->transmission,
-                    'door_count' => $vehicle->door_count,
-                    'rating' => round($vehicle->rating ?? 0, 1),
-                    'review_count' => $vehicle->review_count ?? 0,
-                ];
-            });
+        $category = $request->query('category', 'All');
+
+        $vehiclesQuery = Vehicle::with('reviews'); // relasi reviews
+
+        // Filter kategori jika bukan "All"
+        if (strtolower($category) !== 'all') {
+            $vehiclesQuery->whereRaw('LOWER(category) = ?', [strtolower($category)]);
+        }
+
+        $vehicles = $vehiclesQuery->get()->map(function ($vehicle) {
+            return [
+                'id' => $vehicle->id,
+                'name' => $vehicle->name,
+                'type' => $vehicle->type,
+                'price_per_day' => $vehicle->price_per_day,
+                'availability' => $vehicle->availability,
+                'description' => $vehicle->description,
+                'image_url' => $vehicle->image_url,
+                'seat_capacity' => $vehicle->seat_capacity,
+                'transmission' => $vehicle->transmission,
+                'door_count' => $vehicle->door_count,
+                'rating' => round($vehicle->rating ?? 0, 1),
+                'review_count' => $vehicle->review_count ?? 0,
+            ];
+        });
 
         return response()->json($vehicles);
     }
@@ -102,18 +109,17 @@ class VehicleController extends Controller
         return response()->json(['message' => 'Vehicle deleted']);
     }
 
-    public function getVehicles(Request $request)
-    {
-        $category = $request->query('category', 'All'); // Default kategori "All"
-        
-        $vehicles = Vehicle::query();
-        
-        // Jika kategori bukan 'All', filter kendaraan berdasarkan kategori
-        if ($category !== 'All') {
-            $vehicles = $vehicles->where('category', $category);
-        }
-        
-        return response()->json($vehicles->get()); // Mengembalikan data kendaraan yang sudah difilter
-    }
+    // public function getVehicles(Request $request)
+    // {
+    //     $category = $request->query('category', 'All');
+
+    //     $vehicles = Vehicle::query();
+
+    //     if (strtolower($category) !== 'all') {
+    //         $vehicles = $vehicles->whereRaw('LOWER(category) = ?', [strtolower($category)]);
+    //     }
+
+    //     return response()->json($vehicles->get());
+    // }
 
 }

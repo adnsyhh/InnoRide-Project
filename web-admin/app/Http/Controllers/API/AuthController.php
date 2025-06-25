@@ -52,6 +52,12 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if ($user->user_sts !== 'active') {
+            return response()->json([
+                'message' => 'Your account is inactive. Please contact administrator.'
+            ], 403); // 403 Forbidden
+        }
+
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
